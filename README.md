@@ -1,4 +1,4 @@
-# AI Chemical Research Agent
+# ⚗️Chemical Structure Research Agent
 
 This project is a Python-based AI research assistant that, given a chemical name or CAS number, retrieves the chemical structure image from PubChem, stores it in a local database, and searches for related academic papers using the Semantic Scholar API. The application features an easy-to-use web UI built with Streamlit.
 
