@@ -8,9 +8,9 @@ st.title("Chemical Research Agent")
 chemical_input = st.text_input("Enter chemical name or CAS number:")
 
 if st.button("Search"):
-    cid, image_url = fetch_pubchem_image(chemical_input)
+    cid, image_url, source = fetch_pubchem_image(chemical_input)
     if cid:
-        st.image(image_url, caption=chemical_input)
+        st.image(image_url, caption=f"{chemical_input} (Source: {source})")
         st.success(f"CID: {cid}")
         save_chemical(chemical_input, "", cid, image_url)
 
