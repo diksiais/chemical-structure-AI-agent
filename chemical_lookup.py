@@ -21,6 +21,16 @@ def fetch_pubchem_image(chemical_name):
         image_url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/PNG"
         return cid, image_url, "PubChem"
 
+    # Auto-suggestion: try correcting common endings like "-ate" to "-ole"
+    if chemical_name.endswith("ate"):
+        suggested_name = chemical_name.replace("ate", "ole")
+        url_suggest = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{suggested_name}/cids/JSON"
+        r_suggest = requests.get(url_suggest, verify=False)
+        if r_suggest.status_code == 200 and 'IdentifierList' in r_suggest.json():
+            cid = r_suggest.json()['IdentifierList']['CID'][0]
+            image_url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/PNG"
+            return cid, image_url, f"PubChem (suggested: {suggested_name})"
+
     # Third try: fallback to NCI Cactus structure resolver
     cactus_url = f"https://cactus.nci.nih.gov/chemical/structure/{chemical_name}/image"
     r_cactus = requests.get(cactus_url, verify=False)
