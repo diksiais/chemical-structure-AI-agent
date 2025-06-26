@@ -11,7 +11,7 @@ def fetch_pubchem_image(chemical_name):
     if r.status_code == 200 and 'IdentifierList' in r.json():
         cid = r.json()['IdentifierList']['CID'][0]
         image_url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/PNG"
-        return cid, image_url
+        return cid, image_url, "PubChem"
 
     # Second try: search by synonym in PubChem
     url_syn = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/synonym/{chemical_name}/cids/JSON"
@@ -19,12 +19,12 @@ def fetch_pubchem_image(chemical_name):
     if r_syn.status_code == 200 and 'IdentifierList' in r_syn.json():
         cid = r_syn.json()['IdentifierList']['CID'][0]
         image_url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/PNG"
-        return cid, image_url
+        return cid, image_url, "PubChem"
 
     # Third try: fallback to NCI Cactus structure resolver
     cactus_url = f"https://cactus.nci.nih.gov/chemical/structure/{chemical_name}/image"
     r_cactus = requests.get(cactus_url, verify=False)
     if r_cactus.status_code == 200:
-        return "CACTUS", cactus_url
+        return "CACTUS", cactus_url, "Cactus"
 
-    return None, "Not found"
+    return None, "Not found", None
